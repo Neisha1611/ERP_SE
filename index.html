@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nawasena ERP — PT Nawasena Internasional Group</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ======================================================
+     LOGIN PAGE
+====================================================== -->
+<div id="loginPage" class="login-page">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="brand-icon">NIG</div>
+      <div>
+        <div class="brand-name">Nawasena ERP</div>
+        <div class="brand-sub">PT Nawasena Internasional Group</div>
+      </div>
+    </div>
+    <div class="login-title">Selamat Datang</div>
+    <div class="login-desc">Masuk ke sistem ERP untuk melanjutkan</div>
+
+    <div style="margin-bottom:14px">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="loginEmail" placeholder="email@nawasena.com" value="sales@nawasena.com">
+      </div>
+    </div>
+    <div style="margin-bottom:14px">
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="loginPass" placeholder="••••••••" value="password">
+      </div>
+    </div>
+
+    <div style="margin-bottom:14px">
+      <div class="form-group">
+        <label>Role (Demo)</label>
+        <select id="loginRole">
+          <option value="sales">Staf Penjualan</option>
+          <option value="gudang">Staf Gudang</option>
+          <option value="manager">Manager</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn-login" onclick="doLogin()">Masuk</button>
+  </div>
+</div>
+
+<!-- ======================================================
+     APP
+====================================================== -->
+<div id="appWrapper" class="app" style="display:none">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">NIG</div>
+      <div>
+        <div class="brand-name">Nawasena ERP</div>
+        <div class="brand-sub">v1.0.0</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNav">
+      <!-- Rendered by JS -->
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="avatar" id="sidebarAvatar">?</div>
+      <div class="user-info">
+        <div class="user-name" id="sidebarName">—</div>
+        <div class="user-role" id="sidebarRole">—</div>
+      </div>
+      <button class="btn-logout" onclick="doLogout()" title="Logout">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="breadcrumb" id="topBreadcrumb">
+        <span>Nawasena ERP</span>
+        <span class="bc-sep">›</span>
+        <span class="bc-current" id="topPageTitle">Dashboard</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" onclick="toggleNotif()" id="notifBtn" title="Notifikasi">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notif-dot"></span>
+        </button>
+        <div class="topbar-avatar" id="topAvatar">?</div>
+      </div>
+      <!-- Notif panel -->
+      <div class="notif-panel" id="notifPanel" style="display:none">
+        <div class="notif-header">Notifikasi</div>
+        <div class="notif-item unread">
+          <div class="notif-icon warn">⚠</div>
+          <div>
+            <div class="notif-title">Stok Arabika Gayo mendekati batas minimum</div>
+            <div class="notif-time">5 menit lalu</div>
+          </div>
+        </div>
+        <div class="notif-item unread">
+          <div class="notif-icon info">📦</div>
+          <div>
+            <div class="notif-title">Pesanan SO-2025-0042 menunggu konfirmasi</div>
+            <div class="notif-time">1 jam lalu</div>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-icon ok">✓</div>
+          <div>
+            <div class="notif-title">Pembayaran SO-2025-0039 telah dikonfirmasi</div>
+            <div class="notif-time">2 jam lalu</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content" id="mainContent">
+
+      <!-- ============== DASHBOARD ============== -->
+      <div class="page active" id="page-dashboard">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Dashboard</div>
+            <div class="page-sub">Ringkasan kinerja PT Nawasena Internasional Group</div>
+          </div>
+          <div class="header-actions">
+            <span style="font-size:12px;color:var(--text-3)" id="dashDate"></span>
+          </div>
+        </div>
+
+        <!-- Metrics -->
+        <div class="metrics-grid" id="dashMetrics">
+          <!-- Filled by JS per role -->
+        </div>
+
+        <div class="two-col">
+          <!-- Chart -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Penjualan 6 Bulan Terakhir</div>
+              <span style="font-size:11px;color:var(--text-3)">2025</span>
+            </div>
+            <div class="chart-container">
+              <div class="chart-bars">
+                <div class="chart-bar-wrap"><div class="chart-val">41jt</div><div class="chart-bar" style="height:52%"></div></div>
+                <div class="chart-bar-wrap"><div class="chart-val">38jt</div><div class="chart-bar" style="height:48%"></div></div>
+                <div class="chart-bar-wrap"><div class="chart-val">55jt</div><div class="chart-bar" style="height:70%"></div></div>
+                <div class="chart-bar-wrap"><div class="chart-val">62jt</div><div class="chart-bar" style="height:79%"></div></div>
+                <div class="chart-bar-wrap"><div class="chart-val">71jt</div><div class="chart-bar" style="height:90%"></div></div>
+                <div class="chart-bar-wrap"><div class="chart-val">79jt</div><div class="chart-bar" style="height:100%"></div></div>
+              </div>
+              <div class="chart-labels">
+                <div class="chart-label">Jan</div><div class="chart-label">Feb</div>
+                <div class="chart-label">Mar</div><div class="chart-label">Apr</div>
+                <div class="chart-label">Mei</div><div class="chart-label">Jun</div>
+              </div>
+            </div>
+          </div>
+          <!-- Recent orders -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Pesanan Terbaru</div>
+              <button class="btn btn-outline btn-sm" onclick="showPage('pesanan')">Lihat Semua</button>
+            </div>
+            <div class="recent-list">
+              <div class="recent-item">
+                <div class="recent-left">
+                  <div class="list-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+                  <div><div class="list-main">SO-2025-0042</div><div class="list-sub">CV Maju Bersama · 150 kg</div></div>
+                </div>
+                <span class="badge badge-warning">Diproses</span>
+              </div>
+              <div class="recent-item">
+                <div class="recent-left">
+                  <div class="list-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+                  <div><div class="list-main">SO-2025-0041</div><div class="list-sub">UD Kopi Nusantara · 200 kg</div></div>
+                </div>
+                <span class="badge badge-success">Selesai</span>
+              </div>
+              <div class="recent-item">
+                <div class="recent-left">
+                  <div class="list-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+                  <div><div class="list-main">SO-2025-0040</div><div class="list-sub">PT Indah Coffee · 80 kg</div></div>
+                </div>
+                <span class="badge badge-info">Dikirim</span>
+              </div>
+              <div class="recent-item">
+                <div class="recent-left">
+                  <div class="list-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+                  <div><div class="list-main">SO-2025-0039</div><div class="list-sub">Toko Kopi Sejahtera · 120 kg</div></div>
+                </div>
+                <span class="badge badge-success">Selesai</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stok rendah -->
+        <div class="card" style="margin-top:16px">
+          <div class="card-header">
+            <div class="card-title">Status Stok Produk</div>
+            <button class="btn btn-outline btn-sm" onclick="showPage('stok')">Kelola Stok</button>
+          </div>
+          <div class="progress-item">
+            <div class="progress-label"><span>Arabika Gayo — Grade 1</span><span style="color:#e74c3c;font-weight:600">85 kg (Rendah!)</span></div>
+            <div class="progress-track"><div class="progress-fill critical" style="width:17%"></div></div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-label"><span>Robusta Lampung — Grade A</span><span>420 kg</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:84%"></div></div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-label"><span>Arabika Java Ijen — Grade 1</span><span style="color:#f39c12;font-weight:600">150 kg (Menipis)</span></div>
+            <div class="progress-track"><div class="progress-fill low" style="width:30%"></div></div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-label"><span>Robusta Temanggung — Grade B</span><span>310 kg</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:62%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============== DATA PELANGGAN ============== -->
+      <div class="page" id="page-pelanggan">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Data Pelanggan</div>
+            <div class="page-sub">Kelola informasi pelanggan perusahaan</div>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-primary" onclick="openModalTambahPelanggan()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Tambah Pelanggan
+            </button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="toolbar">
+            <div class="search-wrap">
+              <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input class="search-input" type="text" placeholder="Cari nama / perusahaan..." oninput="filterPelanggan(this.value)">
+            </div>
+            <select class="filter-select" onchange="filterPelangganKategori(this.value)">
+              <option value="">Semua Kategori</option>
+              <option value="Domestik">Domestik</option>
+              <option value="Ekspor">Ekspor</option>
+              <option value="Reseller">Reseller</option>
+            </select>
+          </div>
+          <div class="table-wrap">
+            <table id="tablePelanggan">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nama Pelanggan</th>
+                  <th>Perusahaan</th>
+                  <th>Kontak</th>
+                  <th>Kategori</th>
+                  <th>Total Transaksi</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyPelanggan"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============== RIWAYAT PEMBELIAN ============== -->
+      <div class="page" id="page-riwayatPembelian">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Riwayat Pembelian Pelanggan</div>
+            <div class="page-sub">Rekap seluruh riwayat transaksi pembelian pelanggan</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="toolbar">
+            <div class="search-wrap">
+              <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input class="search-input" type="text" placeholder="Cari nama pelanggan / nomor SO...">
+            </div>
+            <select class="filter-select">
+              <option value="">Semua Status</option>
+              <option>Selesai</option>
+              <option>Diproses</option>
+              <option>Dibatalkan</option>
+            </select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>No. SO</th>
+                  <th>Pelanggan</th>
+                  <th>Produk</th>
+                  <th>Qty (kg)</th>
+                  <th>Total</th>
+                  <th>Tgl Transaksi</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyRiwayatBeli"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============== PESANAN PENJUALAN ============== -->
+      <div class="page" id="page-pesanan">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Pesanan Penjualan</div>
+            <div class="page-sub">Kelola dan pantau seluruh pesanan penjualan</div>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-primary" onclick="openModalTambahPesanan()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Buat Pesanan
+            </button>
+          </div>
+        </div>
+
+        <div class="stat-row" style="grid-template-columns:repeat(4,1fr)">
+          <div class="stat-box"><div class="val" style="color:var(--brown)">12</div><div class="lbl">Total Aktif</div></div>
+          <div class="stat-box"><div class="val" style="color:#f39c12">4</div><div class="lbl">Menunggu</div></div>
+          <div class="stat-box"><div class="val" style="color:#1565c0">5</div><div class="lbl">Diproses</div></div>
+          <div class="stat-box"><div class="val" style="color:#27ae60">3</div><div class="lbl">Dikirim</div></div>
+        </div>
+
+        <div class="card">
+          <div class="toolbar">
+            <div class="search-wrap">
+              <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input class="search-input" type="text" placeholder="Cari nomor SO / pelanggan...">
+            </div>
+            <select class="filter-select">
+              <option value="">Semua Status</option>
+              <option>Menunggu</option>
+              <option>Diproses</option>
+              <option>Dikirim</option>
+              <option>Selesai</option>
+            </select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>No. SO</th>
+                  <th>Pelanggan</th>
+                  <th>Produk</th>
+                  <th>Qty (kg)</th>
+                  <th>Total Harga</th>
+                  <th>Tgl Pesan</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyPesanan"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============== RIWAYAT PEMESANAN ============== -->
+      <div class="page" id="page-riwayatPesanan">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Riwayat Pemesanan</div>
+            <div class="page-sub">Rekap seluruh riwayat pesanan penjualan</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="toolbar">
+            <div class="search-wrap">
+              <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input class="search-input" type="text" placeholder="Cari nomor SO / pelanggan...">
+            </div>
+            <select class="filter-select">
+              <option value="">Semua Status</option>
+              <option>Selesai</option>
+              <option>Dibatalkan</option>
+            </select>
+            <input type="month" class="filter-select" value="2025-06">
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>No. SO</th>
+                  <th>Pelanggan</th>
+                  <th>Produk</th>
+                  <th>Qty (kg)</th>
+                  <th>Total Harga</th>
+                  <th>Tgl Pesan</th>
+                  <th>Tgl Selesai</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyRiwayatPesanan"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============== DATA PRODUK ============== -->
+      <div class="page" id="page-produk">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Data Produk</div>
+            <div class="page-sub">Kelola katalog produk kopi</div>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-primary" onclick="openModalTambahProduk()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Tambah Produk
+            </button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="toolbar">
+            <div class="search-wrap">
+              <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input class="search-input" type="text" placeholder="Cari nama produk...">
+            </div>
+            <select class="filter-select">
+              <option value="">Semua Jenis</option>
+              <option>Arabika</option>
+              <option>Robusta</option>
+            </select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Kode</th>
+                  <th>Nama Produk</th>
+                  <th>Jenis</th>
+                  <th>Asal Daerah</th>
+                  <th>Grade</th>
+                  <th>Harga/kg</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyProduk"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============== DATA STOK ============== -->
+      <div class="page" id="page-stok">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Data Stok</div>
+            <div class="page-sub">Kelola persediaan produk di gudang</div>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-primary" onclick="openModalTambahStok()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Tambah Stok Masuk
+            </button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="toolbar">
+            <div class="search-wrap">
+              <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input class="search-input" type="text" placeholder="Cari produk...">
+            </div>
+            <select class="filter-select">
+              <option value="">Semua Status</option>
+              <option>Normal</option>
+              <option>Menipis</option>
+              <option>Kritis</option>
+            </select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Kode Produk</th>
+                  <th>Nama Produk</th>
+                  <th>Stok Tersedia (kg)</th>
+                  <th>Stok Masuk (kg)</th>
+                  <th>Stok Keluar (kg)</th>
+                  <th>Min. Stok (kg)</th>
+                  <th>Tgl Update</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyStok"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============== LAPORAN PENJUALAN ============== -->
+      <div class="page" id="page-laporanPenjualan">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Laporan Penjualan</div>
+            <div class="page-sub">Analitik dan ringkasan kinerja penjualan</div>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-outline">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Unduh PDF
+            </button>
+            <button class="btn btn-outline">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Unduh Excel
+            </button>
+          </div>
+        </div>
+
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-icon" style="background:#FFF3E0"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6B3F1A" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+            <div class="metric-info">
+              <div class="metric-label">Total Pendapatan (Bulan Ini)</div>
+              <div class="metric-value" style="font-size:18px">Rp 79,2 jt</div>
+              <div class="metric-delta up">↑ 11.3% vs bulan lalu</div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon" style="background:#E3F2FD"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1565c0" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+            <div class="metric-info">
+              <div class="metric-label">Total Pesanan (Bulan Ini)</div>
+              <div class="metric-value" style="font-size:18px">42</div>
+              <div class="metric-delta up">↑ 8 dari bulan lalu</div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon" style="background:#EAF3DE"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+            <div class="metric-info">
+              <div class="metric-label">Volume Terjual (kg)</div>
+              <div class="metric-value" style="font-size:18px">1.640</div>
+              <div class="metric-delta up">↑ 5.2% vs bulan lalu</div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon" style="background:#EDE7F6"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4527a0" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <div class="metric-info">
+              <div class="metric-label">Pelanggan Aktif</div>
+              <div class="metric-value" style="font-size:18px">28</div>
+              <div class="metric-delta up">↑ 3 pelanggan baru</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Produk Terlaris</div></div>
+            <div>
+              <div class="laporan-row">
+                <div style="min-width:160px"><div class="laporan-name">Arabika Gayo Grade 1</div><div class="laporan-qty">420 kg terjual</div></div>
+                <div class="laporan-bar-wrap"><div class="progress-track"><div class="progress-fill" style="width:100%"></div></div></div>
+                <div class="laporan-rev">Rp 29,4 jt</div>
+              </div>
+              <div class="laporan-row">
+                <div style="min-width:160px"><div class="laporan-name">Robusta Lampung Grade A</div><div class="laporan-qty">390 kg terjual</div></div>
+                <div class="laporan-bar-wrap"><div class="progress-track"><div class="progress-fill" style="width:93%"></div></div></div>
+                <div class="laporan-rev">Rp 21,5 jt</div>
+              </div>
+              <div class="laporan-row">
+                <div style="min-width:160px"><div class="laporan-name">Arabika Java Ijen Grade 1</div><div class="laporan-qty">280 kg terjual</div></div>
+                <div class="laporan-bar-wrap"><div class="progress-track"><div class="progress-fill" style="width:67%"></div></div></div>
+                <div class="laporan-rev">Rp 19,6 jt</div>
+              </div>
+              <div class="laporan-row">
+                <div style="min-width:160px"><div class="laporan-name">Robusta Temanggung Grade B</div><div class="laporan-qty">200 kg terjual</div></div>
+                <div class="laporan-bar-wrap"><div class="progress-track"><div class="progress-fill" style="width:48%"></div></div></div>
+                <div class="laporan-rev">Rp 9,0 jt</div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Penjualan per Bulan (2025)</div></div>
+            <div class="chart-container">
+              <div class="chart-bars" style="height:120px">
+                <div class="chart-bar-wrap"><div class="chart-val">41jt</div><div class="chart-bar dim" style="height:52%"></div></div>
+                <div class="chart-bar-wrap"><div class="chart-val">38jt</div><div class="chart-bar dim" style="height:48%"></div></div>
+                <div class="chart-bar-wrap"><div class="chart-val">55jt</div><div class="chart-bar dim" style="height:70%"></div></div>
+                <div class="chart-bar-wrap"><div class="chart-val">62jt</div><div class="chart-bar dim" style="height:79%"></div></div>
+                <div class="chart-bar-wrap"><div class="chart-val">71jt</div><div class="chart-bar dim" style="height:90%"></div></div>
+                <div class="chart-bar-wrap"><div class="chart-val">79jt</div><div class="chart-bar" style="height:100%"></div></div>
+              </div>
+              <div class="chart-labels">
+                <div class="chart-label">Jan</div><div class="chart-label">Feb</div>
+                <div class="chart-label">Mar</div><div class="chart-label">Apr</div>
+                <div class="chart-label">Mei</div><div class="chart-label">Jun</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:16px">
+          <div class="card-header"><div class="card-title">Detail Transaksi Penjualan</div></div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>No. SO</th><th>Pelanggan</th><th>Produk</th><th>Qty (kg)</th><th>Harga/kg</th><th>Total</th><th>Tgl</th><th>Status</th></tr>
+              </thead>
+              <tbody id="tbodyLapPenjualan"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============== LAPORAN PELANGGAN ============== -->
+      <div class="page" id="page-laporanPelanggan">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Laporan Pelanggan</div>
+            <div class="page-sub">Analitik data dan aktivitas pelanggan</div>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-outline">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Unduh PDF
+            </button>
+          </div>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-box"><div class="val" style="color:var(--brown)">48</div><div class="lbl">Total Pelanggan</div></div>
+          <div class="stat-box"><div class="val" style="color:#27ae60">28</div><div class="lbl">Pelanggan Aktif</div></div>
+          <div class="stat-box"><div class="val" style="color:#1565c0">15</div><div class="lbl">Pelanggan Ekspor</div></div>
+          <div class="stat-box"><div class="val" style="color:#f39c12">3</div><div class="lbl">Pelanggan Baru (Bulan Ini)</div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">Daftar Pelanggan & Aktivitas</div></div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>ID</th><th>Nama Pelanggan</th><th>Kategori</th><th>Total Transaksi</th><th>Total Pembelian (kg)</th><th>Total Nilai</th><th>Pelanggan Sejak</th><th>Status</th></tr>
+              </thead>
+              <tbody id="tbodyLapPelanggan"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============== LAPORAN PERSEDIAAN ============== -->
+      <div class="page" id="page-laporanPersediaan">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Laporan Persediaan Produk</div>
+            <div class="page-sub">Ringkasan kondisi stok gudang</div>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-outline">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Unduh PDF
+            </button>
+          </div>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-box"><div class="val" style="color:var(--brown)">8</div><div class="lbl">Total Jenis Produk</div></div>
+          <div class="stat-box"><div class="val" style="color:#27ae60">1.780</div><div class="lbl">Total Stok (kg)</div></div>
+          <div class="stat-box"><div class="val" style="color:#e74c3c">1</div><div class="lbl">Stok Kritis</div></div>
+          <div class="stat-box"><div class="val" style="color:#f39c12">2</div><div class="lbl">Stok Menipis</div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">Detail Persediaan per Produk</div></div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Kode</th><th>Nama Produk</th><th>Jenis</th><th>Stok Awal (kg)</th><th>Masuk (kg)</th><th>Keluar (kg)</th><th>Stok Akhir (kg)</th><th>Min. Stok</th><th>Status</th></tr>
+              </thead>
+              <tbody id="tbodyLapPersediaan"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- ============================================================
+     MODALS
+============================================================ -->
+
+<!-- Modal Tambah Pelanggan -->
+<div class="modal-backdrop" id="modalPelanggan">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalPelangganTitle">Tambah Pelanggan</div>
+      <button class="modal-close" onclick="closeModal('modalPelanggan')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Nama Pelanggan <span class="req">*</span></label>
+          <input type="text" id="fNamaPelanggan" placeholder="Nama lengkap">
+        </div>
+        <div class="form-group">
+          <label>Nama Perusahaan</label>
+          <input type="text" id="fPerusahaanPelanggan" placeholder="Nama perusahaan">
+        </div>
+        <div class="form-group">
+          <label>No. Telepon <span class="req">*</span></label>
+          <input type="text" id="fTelpPelanggan" placeholder="08xx-xxxx-xxxx">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="fEmailPelanggan" placeholder="email@domain.com">
+        </div>
+        <div class="form-group">
+          <label>Kategori</label>
+          <select id="fKategoriPelanggan">
+            <option>Domestik</option>
+            <option>Ekspor</option>
+            <option>Reseller</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Kota / Negara</label>
+          <input type="text" id="fKotaPelanggan" placeholder="Jakarta / Malaysia">
+        </div>
+        <div class="form-group" style="grid-column:1/-1">
+          <label>Alamat Lengkap</label>
+          <textarea id="fAlamatPelanggan" placeholder="Alamat lengkap pelanggan"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modalPelanggan')">Batal</button>
+      <button class="btn btn-primary" onclick="savePelanggan()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Tambah Produk -->
+<div class="modal-backdrop" id="modalProduk">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalProdukTitle">Tambah Produk</div>
+      <button class="modal-close" onclick="closeModal('modalProduk')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Nama Produk <span class="req">*</span></label>
+          <input type="text" id="fNamaProduk" placeholder="Contoh: Arabika Gayo Grade 1">
+        </div>
+        <div class="form-group">
+          <label>Jenis Kopi</label>
+          <select id="fJenisProduk">
+            <option>Arabika</option>
+            <option>Robusta</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Asal Daerah</label>
+          <input type="text" id="fAsalProduk" placeholder="Gayo, Lampung, Java Ijen...">
+        </div>
+        <div class="form-group">
+          <label>Grade</label>
+          <select id="fGradeProduk">
+            <option>Grade 1</option>
+            <option>Grade A</option>
+            <option>Grade B</option>
+            <option>Specialty</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Harga per kg (Rp) <span class="req">*</span></label>
+          <input type="number" id="fHargaProduk" placeholder="70000">
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="fStatusProduk">
+            <option>Aktif</option>
+            <option>Non-aktif</option>
+          </select>
+        </div>
+        <div class="form-group" style="grid-column:1/-1">
+          <label>Deskripsi Produk</label>
+          <textarea id="fDesProduk" placeholder="Deskripsi singkat mengenai produk..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modalProduk')">Batal</button>
+      <button class="btn btn-primary" onclick="saveProduk()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Tambah Stok -->
+<div class="modal-backdrop" id="modalStok">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalStokTitle">Tambah Stok Masuk</div>
+      <button class="modal-close" onclick="closeModal('modalStok')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Produk <span class="req">*</span></label>
+          <select id="fProdukStok">
+            <option>Arabika Gayo — Grade 1</option>
+            <option>Robusta Lampung — Grade A</option>
+            <option>Arabika Java Ijen — Grade 1</option>
+            <option>Robusta Temanggung — Grade B</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Jumlah Masuk (kg) <span class="req">*</span></label>
+          <input type="number" id="fJumlahStok" placeholder="500">
+        </div>
+        <div class="form-group">
+          <label>Sumber / Pemasok</label>
+          <input type="text" id="fSumberStok" placeholder="Nama pemasok / petani">
+        </div>
+        <div class="form-group">
+          <label>Tanggal Masuk</label>
+          <input type="date" id="fTglStok">
+        </div>
+        <div class="form-group" style="grid-column:1/-1">
+          <label>Catatan</label>
+          <textarea id="fCatatanStok" placeholder="Catatan tambahan..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modalStok')">Batal</button>
+      <button class="btn btn-primary" onclick="saveStok()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Buat Pesanan -->
+<div class="modal-backdrop" id="modalPesanan">
+  <div class="modal" style="max-width:620px">
+    <div class="modal-header">
+      <div class="modal-title">Buat Pesanan Penjualan</div>
+      <button class="modal-close" onclick="closeModal('modalPesanan')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Pelanggan <span class="req">*</span></label>
+          <select id="fPelangganPesanan">
+            <option>CV Maju Bersama</option>
+            <option>UD Kopi Nusantara</option>
+            <option>PT Indah Coffee</option>
+            <option>Toko Kopi Sejahtera</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Tanggal Pesan</label>
+          <input type="date" id="fTglPesanan">
+        </div>
+        <div class="form-group">
+          <label>Produk <span class="req">*</span></label>
+          <select id="fProdukPesanan" onchange="hitungTotal()">
+            <option value="70000">Arabika Gayo — Grade 1 (Rp 70.000/kg)</option>
+            <option value="55000">Robusta Lampung — Grade A (Rp 55.000/kg)</option>
+            <option value="70000">Arabika Java Ijen — Grade 1 (Rp 70.000/kg)</option>
+            <option value="45000">Robusta Temanggung — Grade B (Rp 45.000/kg)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Jumlah (kg) <span class="req">*</span></label>
+          <input type="number" id="fQtyPesanan" placeholder="100" oninput="hitungTotal()">
+        </div>
+        <div class="form-group">
+          <label>Metode Pembayaran</label>
+          <select id="fMetodePesanan">
+            <option>Transfer Bank</option>
+            <option>LC (Letter of Credit)</option>
+            <option>DP 50%</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Alamat Pengiriman</label>
+          <input type="text" id="fAlamatPesanan" placeholder="Alamat tujuan">
+        </div>
+        <div class="form-group" style="grid-column:1/-1">
+          <label>Catatan</label>
+          <textarea id="fCatatanPesanan" placeholder="Catatan tambahan..."></textarea>
+        </div>
+      </div>
+      <div class="total-preview">
+        <span>Estimasi Total</span>
+        <span id="previewTotal" style="font-size:16px;font-weight:700">Rp 0</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modalPesanan')">Batal</button>
+      <button class="btn btn-primary" onclick="savePesanan()">Buat Pesanan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Ubah Status Pesanan -->
+<div class="modal-backdrop" id="modalStatusPesanan">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-header">
+      <div class="modal-title">Ubah Status Pesanan</div>
+      <button class="modal-close" onclick="closeModal('modalStatusPesanan')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Nomor SO</label>
+        <input type="text" id="fSoStatus" readonly style="background:#f5f4f1">
+      </div>
+      <div class="form-group" style="margin-top:12px">
+        <label>Status Baru <span class="req">*</span></label>
+        <select id="fStatusBaru">
+          <option value="Menunggu">Menunggu</option>
+          <option value="Diproses">Diproses</option>
+          <option value="Dikirim">Dikirim</option>
+          <option value="Selesai">Selesai</option>
+          <option value="Dibatalkan">Dibatalkan</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modalStatusPesanan')">Batal</button>
+      <button class="btn btn-primary" onclick="applyStatusPesanan()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Ubah Stok -->
+<div class="modal-backdrop" id="modalEditStok">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-header">
+      <div class="modal-title">Ubah Data Stok</div>
+      <button class="modal-close" onclick="closeModal('modalEditStok')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Nama Produk</label>
+        <input type="text" id="fEditStokNama" readonly style="background:#f5f4f1">
+      </div>
+      <div class="form-grid" style="margin-top:12px">
+        <div class="form-group">
+          <label>Stok Tersedia (kg)</label>
+          <input type="number" id="fEditStokJml" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label>Min. Stok (kg)</label>
+          <input type="number" id="fEditStokMin" placeholder="100">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modalEditStok')">Batal</button>
+      <button class="btn btn-primary" onclick="applyEditStok()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
