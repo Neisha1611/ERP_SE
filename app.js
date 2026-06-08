@@ -259,13 +259,6 @@ function filterPelangganKategori(k) {
   renderPelanggan(k ? dataPelanggan.filter(p => p.kategori === k) : dataPelanggan);
 }
 
-function openModalTambahPelanggan() {
-  editPelangganId = null;
-  document.getElementById('modalPelangganTitle').textContent = 'Tambah Pelanggan';
-  ['fNamaPelanggan','fPerusahaanPelanggan','fTelpPelanggan','fEmailPelanggan','fKotaPelanggan','fAlamatPelanggan'].forEach(id => document.getElementById(id).value = '');
-  openModal('modalPelanggan');
-}
-
 function openEditPelanggan(id) {
   const p = dataPelanggan.find(x => x.id === id);
   editPelangganId = id;
@@ -348,12 +341,6 @@ function renderPesanan(data) {
 
 function badgePesanan(s) {
   return s==='Selesai'?'badge-success':s==='Dikirim'?'badge-info':s==='Diproses'?'badge-warning':s==='Menunggu'?'badge-gray':'badge-danger';
-}
-
-function openModalTambahPesanan() {
-  document.getElementById('fTglPesanan').value = new Date().toISOString().split('T')[0];
-  document.getElementById('previewTotal').textContent = 'Rp 0';
-  openModal('modalPesanan');
 }
 
 function hitungTotal() {
